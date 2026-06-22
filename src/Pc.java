@@ -1,6 +1,11 @@
+import java.util.List;
+
 import hardware.memoria.Disco;
 import hardware.memoria.MemoriaFisica;
 import so.MemoriaVirtual;
+import util.FabricaDeEntradas;
+import util.Instrucao;
+import util.LeitorInstrucao;
 
 public class Pc {
     
@@ -22,6 +27,18 @@ public class Pc {
         this.memoriaFisica = new MemoriaFisica(TAMANHO_MEMORIA_FISICA);
         this.memoriaVirtual = new MemoriaVirtual(TAMANHO_MEMORIA_VIRTUAL);
         this.discoRigido = new Disco(TAMANHO_DISCO);
+    }
+
+    public void iniciar() {        
+        // cria a fábrica e já extrai a string
+        String sequenciaComandos = new FabricaDeEntradas(TAMANHO_MEMORIA_VIRTUAL).getNewEntrada(); 
+        
+        // passa a string para o leitor
+        LeitorInstrucao leitor = new LeitorInstrucao();
+        List<Instrucao> listaInstrucoes = leitor.separar(sequenciaComandos);
+        
+        System.out.println("--- Operações ---");
+        System.out.println(listaInstrucoes);
     }
 
     //aq tem os getters para mmu, so e o que mais precisar ter acesso a essas memorias
