@@ -79,12 +79,4 @@ public class FabricaDeEntradas {
 		value = sb.substring(0, sb.length()-1);
 		return value;
 	}
-	
-	public static void main(String[] args) {
-		//EXEMPLO QUE COMO USAR A FABRICA DE ENTRADAS
-		int tamanhoDaMinhaMemoriaVirtual = 10;
-		String SUA_ENTRADA = new FabricaDeEntradas(tamanhoDaMinhaMemoriaVirtual).getNewEntrada();
-		System.out.println(SUA_ENTRADA);
-	}
-
 }
