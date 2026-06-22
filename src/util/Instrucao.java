@@ -25,6 +25,17 @@ public class Instrucao {
         this.operacao = operacao;
     }
 
+    @Override
+    public String toString() {
+        // Se for operação de escrita, mostramos o valor também
+        if (this.operacao == 'W') {
+            return "[" + this.enderecoVirtual + "-" + this.operacao + "-" + this.valor + "]";
+        } else {
+            // Se for leitura, mostramos só endereço e operação
+            return "[" + this.enderecoVirtual + "-" + this.operacao + "]";
+        }
+    }
+
     // Não possui Setters para não modificar os dados
     public int getEnderecoVirtual() { 
         return enderecoVirtual; 
