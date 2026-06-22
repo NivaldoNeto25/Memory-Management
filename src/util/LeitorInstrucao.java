@@ -1,27 +1,45 @@
 package util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LeitorInstrucao {
 
-    // Recebe a string do gerador e devolve o objeto
-    public Instrucao traduzir(String comandos) {
+    // Recebe a string do gerador e devolve uma lista de objetos
+    public List<Instrucao> separar(String sequenciaComandos) {
         
-        // Corta a string quando encontrar hifens
-        String[] partes = comandos.split("-");
+        List<Instrucao> filaInstrucao = new ArrayList<>();
+
+        // corta a string gigante nas vírgulas para separar as instruções
+        // vira um array com ex: ["1-R", "2-W-50", "3-R"]
+        String[] comando = sequenciaComandos.split(",");
         
-        // Vai separar os dados nas variáveis
-        int endereco = Integer.parseInt(partes[0]);
-        char operacao = partes[1].toUpperCase().charAt(0); 
-        
-        // Escolhe o construtor baseado na operação
-        if (operacao == 'W') {
-            // Como é Escrita a posição [2] do array tem o valor/dado a ser escrito
-            Integer valor = Integer.parseInt(partes[2]);
-            return new Instrucao(endereco, operacao, valor);
+        // laço for para separar todos os dados
+        for (String instrucao : comando) {
             
-        } else {
-            // Sendo Leitura vai usar o construtor de 2 parâmetros.
-            // O Java define o Integer valor como null 
-            return new Instrucao(endereco, operacao);
+            // agora vai separar baseado nos hifens
+            String[] partes = instrucao.split("-");
+            
+            // Vai separar os dados nas variáveis
+            int endereco = Integer.parseInt(partes[0]);
+            char operacao = partes[1].toUpperCase().charAt(0); 
+            
+            // Escolhe o construtor baseado na operação
+            if (operacao == 'W') {
+                // Como é Escrita, a posição [2] do array tem o valor/dado a ser escrito
+                Integer valor = Integer.parseInt(partes[2]);
+                
+                // adicona a lista
+                filaInstrucao.add(new Instrucao(endereco, operacao, valor));
+                
+            } else {
+                // Sendo Leitura vai usar o construtor de 2 parâmetros.
+                // adiciona a lista
+                filaInstrucao.add(new Instrucao(endereco, operacao));
+            }
         }
+        
+        // retorna a lista com os objetos
+        return filaInstrucao;
     }
 }

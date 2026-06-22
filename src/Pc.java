@@ -1,7 +1,11 @@
 import hardware.SystemClock;
+import java.util.List;
 import hardware.memoria.Disco;
 import hardware.memoria.MemoriaFisica;
 import so.MemoriaVirtual;
+import util.FabricaDeEntradas;
+import util.Instrucao;
+import util.LeitorInstrucao;
 
 public class Pc {
     
@@ -32,13 +36,23 @@ public class Pc {
 
     // Liga a máquina
     public void boot(){
-        systemClock.start();
         System.out.println("Ligando");
+        // cria a fábrica e já extrai a string
+        String sequenciaComandos = new FabricaDeEntradas(TAMANHO_MEMORIA_VIRTUAL).getNewEntrada(); 
+        
+        // passa a string para o leitor
+        LeitorInstrucao leitor = new LeitorInstrucao();
+        List<Instrucao> listaInstrucoes = leitor.separar(sequenciaComandos);
+        
+        System.out.println("--- Operações ---");
+        System.out.println(listaInstrucoes);
+
+        //systemClock.start();
     }
 
     // Desliga a máquina
     public void turnOff(){
-        systemClock.pararClock();
+        //systemClock.pararClock();
         System.out.println("Desligando");
     }
 
