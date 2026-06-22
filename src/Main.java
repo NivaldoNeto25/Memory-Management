@@ -1,6 +1,8 @@
 public class Main {
+    private static Pc pc = new Pc();
     public static void main(String[] args) {
-        Pc simulador = new Pc();
-        simulador.iniciar();
+
+        pc.boot();
+        pc.turnOff();
     }
 }

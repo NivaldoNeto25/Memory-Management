@@ -7,11 +7,14 @@ public class Pagina {
     private boolean referenciada; // Bit referenciado/não referenciado
     private boolean modificada; // Bit modificado/não modificado  
 
+    private int tempoUltimoAcesso;
+
     public Pagina() {
         this.molduraPagina = -1; // Tem q ser -1 pq nao da pra iniciar com 0. Se for 0, a MMU acha q a pagina ja ta ocupando o indice 0 da memoria RAM
         this.presente = false; // false pq a pagina acabou de ser criada e so existe no HD ainda
         this.referenciada = false; // false pq a thread ainda nem comecou a rodar, então ela ainda não foi lida
         this.modificada = false; // false pq a thread ainda nem comecou a rodar, então ainda não teve operaçao de escrita
+        this.tempoUltimoAcesso = 0; // inicia o tempo em zero
     }
     
     public int getMolduraPagina() { 
@@ -44,5 +47,13 @@ public class Pagina {
 
     public void setModificada(boolean modificada) { 
         this.modificada = modificada; 
+    }
+
+    public int getTempoUltimoAcesso(){
+        return tempoUltimoAcesso;
+    }
+
+    public void setTempoUltimoAcesso(int tempoUltimoAcesso){
+        this.tempoUltimoAcesso = tempoUltimoAcesso;
     }
 }
