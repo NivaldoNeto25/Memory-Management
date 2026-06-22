@@ -1,23 +1,40 @@
 package so;
 
-import so.Pagina;
-
 public class MemoriaVirtual {
-    private Pagina[] espacoVirtual;
+    
+    private TabelaPaginas tabelaPaginas;
 
     public MemoriaVirtual(int tamanho){
-        this.espacoVirtual = new Pagina[tamanho];
-    }
-    
-    public void registrarPagina(int enderecoVirtual, Pagina pagina){ //vai ser usado na inicializacao do sistema p criar as paginas logicas
-        this.espacoVirtual[enderecoVirtual] = pagina;
+        this.tabelaPaginas = new TabelaPaginas(tamanho);
     }
 
-    public Pagina getPaginaLogica(int enderecoVirtual){ //vai retornar a pagina baseado no endereco logico solicitado pela instrucao
-        return this.espacoVirtual[enderecoVirtual];
+    public TabelaPaginas getTabelaPaginas() {
+        return this.tabelaPaginas;
     }
 
-    public int getTamanhoTotal(){ //aq e para a mmu saber o limite dos enderecos
-        return this.espacoVirtual.length;
+    public Pagina getPagina(int enderecoVirtual) {
+        return this.tabelaPaginas.getPagina(enderecoVirtual);
+    }
+
+    public int getTamanhoTotal() {
+        return this.tabelaPaginas.getTamanhoTotal();
+    }
+
+    public Pagina[] getTodasPaginas() {
+        return this.tabelaPaginas.getTodasPaginas();
+    }
+
+    public void carregarPaginaNaMemoriaFisica(int enderecoVirtual, int molduraFisica, int tempoAtual) {
+        Pagina pag = this.getPagina(enderecoVirtual);
+        pag.setPresente(true);
+        pag.setMolduraPagina(molduraFisica);
+        pag.setTempoUltimoAcesso(tempoAtual);
+        pag.setModificada(false); 
+    }
+
+    public void removerPaginaDaMemoriaFisica(int enderecoVirtual) {
+        Pagina pag = this.getPagina(enderecoVirtual);
+        pag.setPresente(false);
+        pag.setMolduraPagina(-1); 
     }
 }
