@@ -1,4 +1,5 @@
 import hardware.SystemClock;
+import java.util.ArrayList;
 import java.util.List;
 import hardware.memoria.Disco;
 import hardware.memoria.MemoriaFisica;
@@ -20,6 +21,8 @@ public class Pc {
 
     public static final int VELOCIDADE_CLOCK = 10;
 
+    public static final int NUM_THREADS = 2; // número de threads
+
     private MemoriaFisica memoriaFisica;
     private MemoriaVirtual memoriaVirtual;
     private Disco discoRigido;
@@ -40,12 +43,36 @@ public class Pc {
         // cria a fábrica e já extrai a string
         String sequenciaComandos = new FabricaDeEntradas(TAMANHO_MEMORIA_VIRTUAL).getNewEntrada(); 
         
-        // passa a string para o leitor
+        // passa a string para o separador
         SeparadorInstrucao separador = new SeparadorInstrucao();
         List<Instrucao> listaInstrucoes = separador.separar(sequenciaComandos);
         
         System.out.println("--- Operações ---");
         System.out.println(listaInstrucoes);
+
+        int totalInstrucoes = listaInstrucoes.size();
+        int instrucoesPorThread = totalInstrucoes / NUM_THREADS;
+        int resto = totalInstrucoes % NUM_THREADS;
+        int indiceInicio = 0;
+        
+        // laço for para distribuir as instruçoes para as threads, se baseando no numero de threads
+        for (int i = 0; i < NUM_THREADS; i++) {
+            // Se houver resto na divisão entrega instrução a mais para a thread atual
+            int qtdParaThreadAtual = instrucoesPorThread + (resto > 0 ? 1 : 0);
+            resto--; 
+            
+            int indiceFim = indiceInicio + qtdParaThreadAtual;
+            
+            // vai cortar a lista em pedaços e passar cada pedaço para uma thread
+            List<Instrucao> instrucoesSeparadas = new ArrayList<>(listaInstrucoes.subList(indiceInicio, indiceFim));
+            
+            // Cria a Thread passando um ID e a quantidade de instruções dela
+            //ProcessoThread thread = new ProcessoThread(i + 1, instrucoesSeparadas);
+            //thread.start();
+            
+            // Prepara o índice inicial para a próxima thread
+            indiceInicio = indiceFim;
+        }
 
         //systemClock.start();
     }
