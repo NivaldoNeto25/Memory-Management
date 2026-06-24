@@ -3,7 +3,7 @@ package util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LeitorInstrucao {
+public class SeparadorInstrucao {
 
     // Recebe a string do gerador e devolve uma lista de objetos
     public List<Instrucao> separar(String sequenciaComandos) {

@@ -5,7 +5,7 @@ import hardware.memoria.MemoriaFisica;
 import so.MemoriaVirtual;
 import util.FabricaDeEntradas;
 import util.Instrucao;
-import util.LeitorInstrucao;
+import util.SeparadorInstrucao;
 
 public class Pc {
     
@@ -41,8 +41,8 @@ public class Pc {
         String sequenciaComandos = new FabricaDeEntradas(TAMANHO_MEMORIA_VIRTUAL).getNewEntrada(); 
         
         // passa a string para o leitor
-        LeitorInstrucao leitor = new LeitorInstrucao();
-        List<Instrucao> listaInstrucoes = leitor.separar(sequenciaComandos);
+        SeparadorInstrucao separador = new SeparadorInstrucao();
+        List<Instrucao> listaInstrucoes = separador.separar(sequenciaComandos);
         
         System.out.println("--- Operações ---");
         System.out.println(listaInstrucoes);
