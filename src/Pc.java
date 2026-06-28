@@ -78,7 +78,7 @@ public class Pc {
             indiceInicio = indiceFim;
         }
 
-        //systemClock.start();
+        systemClock.start();
     }
 
     // Desliga a máquina
