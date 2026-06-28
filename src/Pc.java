@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import hardware.memoria.Disco;
 import hardware.memoria.MemoriaFisica;
+import processos.ProcessoThread;
 import so.MemoriaVirtual;
 import util.FabricaDeEntradas;
 import util.Instrucao;
@@ -70,8 +71,8 @@ public class Pc {
             List<Instrucao> instrucoesSeparadas = new ArrayList<>(listaInstrucoes.subList(indiceInicio, indiceFim));
             
             // Cria a Thread passando um ID e a quantidade de instruções dela
-            //ProcessoThread thread = new ProcessoThread(i + 1, instrucoesSeparadas, mmu);
-            //thread.start();
+            ProcessoThread thread = new ProcessoThread(i + 1, instrucoesSeparadas, mmu);
+            thread.start();
             
             // Prepara o índice inicial para a próxima thread
             indiceInicio = indiceFim;
