@@ -58,6 +58,8 @@ public class Pc {
         int instrucoesPorThread = totalInstrucoes / NUM_THREADS;
         int resto = totalInstrucoes % NUM_THREADS;
         int indiceInicio = 0;
+
+        List<ProcessoThread> listaThreads = new ArrayList<>();
         
         // laço for para distribuir as instruçoes para as threads, se baseando no numero de threads
         for (int i = 0; i < NUM_THREADS; i++) {
@@ -72,6 +74,7 @@ public class Pc {
             
             // Cria a Thread passando um ID e a quantidade de instruções dela
             ProcessoThread thread = new ProcessoThread(i + 1, instrucoesSeparadas, mmu);
+            listaThreads.add(thread);
             thread.start();
             
             // Prepara o índice inicial para a próxima thread
@@ -79,11 +82,19 @@ public class Pc {
         }
 
         systemClock.start();
+
+        for (ProcessoThread thread: listaThreads){
+            try{
+                thread.join();
+            } catch (InterruptedException e){
+                System.out.println("Erro ao guardar a thread.");
+            }
+        }
     }
 
     // Desliga a máquina
     public void turnOff(){
-        //systemClock.pararClock();
+        systemClock.pararClock();
         System.out.println("Desligando");
     }
 

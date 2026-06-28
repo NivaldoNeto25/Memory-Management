@@ -38,7 +38,6 @@ public class MMU {
         if (pagina.isPresente()) {
             
             Printer.log("Thread " + idThread, "Pagina " + endLogico + " ja esta na RAM.");
-            atualizarStatusPagina(pagina, instrucao);
             
         } else {
             // PAGE FAULT
