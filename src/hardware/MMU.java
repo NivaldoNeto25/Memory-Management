@@ -4,6 +4,7 @@ import hardware.memoria.Disco;
 import hardware.memoria.MemoriaFisica;
 import so.MemoriaVirtual;
 import so.Pagina;
+import so.swap.AlgoritmoSub;
 import util.Instrucao;
 import util.Printer;
 
@@ -13,6 +14,7 @@ public class MMU {
     private Disco discoRigido;
     private MemoriaVirtual vm;
     private SystemClock clock;
+    private AlgoritmoSub ws = new AlgoritmoSub(50);
 
     public MMU(MemoriaFisica memoriaRam, MemoriaVirtual vm, Disco discoRigido,  SystemClock clock) {
         this.memoriaRam = memoriaRam;
@@ -36,7 +38,7 @@ public class MMU {
         if (pagina.isPresente()) {
             
             Printer.log("Thread " + idThread, "Pagina " + endLogico + " ja esta na RAM.");
-            atualizarStatusPagina(pagina, instrucao.getOperacao());
+            atualizarStatusPagina(pagina, instrucao);
             
         } else {
             // PAGE FAULT
@@ -46,26 +48,74 @@ public class MMU {
                 // Checa se está presente, para o caso de outra thread ter trazido a pag enquanto a outra esperava fora do synchronized
 
                 if (!pagina.isPresente()) {
-                    Printer.log("Thread " + idThread, "Page Fault no endereco " + endLogico + ". Buscando no disco...");
                     
-                    // Aqui vai chamar o algoritmo de substituição
+                    if (!memoriaRam.isCheia()) {
+                        
+                        int quadroLivre = memoriaRam.encontrarQuadroLivre();
+                        memoriaRam.alocarQuadro(quadroLivre); // aloca um quadro livre
+                        
+                        pagina.setPresente(true);
+                        pagina.setMolduraPagina(quadroLivre); // Atualiza o Mapa
+                        
+                    } else {
+                        // SWAP
+                        Pagina vitima = ws.executar(vm, clock.getTempoAtual(), idThread); // Passa o Mapa
+                        int quadroDaVitima = vitima.getMolduraPagina();
+                        
+                        // Swap out
+                        // vai tirar o dado da ram e salvar em disco
+                        // vai salvar o endereço do hd onde foi salvo
+                        if (vitima.isModificada()) {
+                            int blocoLivre = discoRigido.encontrarBlocoLivre();
+                            if (blocoLivre != -1) {
+                                Integer dadoFisico = memoriaRam.lerDado(quadroDaVitima);
+                                discoRigido.salvarDado(blocoLivre, dadoFisico);
+                                vitima.setBlocoDisco(blocoLivre);
+                                Printer.log("Thread " + idThread, "Vitima modificada! Dado salvo no bloco " + blocoLivre + " do SWAP.");
+                            }
+                        }
+                        
+                        // tira a vítima
+                        memoriaRam.liberarQuadro(quadroDaVitima);
+                        vitima.setPresente(false);
+                        vitima.setMolduraPagina(-1);
+                        vitima.setModificada(false); 
+                        vitima.setReferenciada(false);
+                        
+                        // A nova página entra na RAM
+                        memoriaRam.alocarQuadro(quadroDaVitima);
+                        pagina.setPresente(true);
+                        pagina.setMolduraPagina(quadroDaVitima);
+                        
+                    }
                     
-                    pagina.setPresente(true);
+                    // Swap in
+                    // se a página que entrou já tinha sofrido swap out, traz o dado de volta
+                    // apaga o dado do hd e libera o bloco onde ele tava
+                    if (pagina.getBlocoDisco() != -1) {
+                        Integer dadoResgatado = discoRigido.recuperarDado(pagina.getBlocoDisco());
+                        memoriaRam.escreverDado(pagina.getMolduraPagina(), dadoResgatado);
+                        discoRigido.liberarBloco(pagina.getBlocoDisco());
+                        pagina.setBlocoDisco(-1); 
+                    }
                 }
             }
-            
-            // Depois que a página está na RAM, atualiza os bits
-            atualizarStatusPagina(pagina, instrucao.getOperacao());
         }
+        atualizarStatusPagina(pagina, instrucao); // atualiza os bits
+        
+        Printer.log("Thread " + idThread, "RAM = " + memoriaRam.getEstadoMemoria());
+        Printer.log("Thread " + idThread, "Disco = " + discoRigido.getEstadoDisco());
+        System.out.println("--------------------------------------------------");
     }
 
     // Método para atualizar os bits
-    private void atualizarStatusPagina(Pagina pagina, char operacao) {
+    private void atualizarStatusPagina(Pagina pagina, Instrucao instrucao) {
         pagina.setReferenciada(true);
         pagina.setTempoUltimoAcesso(clock.getTempoAtual());
         
-        if (operacao == 'W') {
+        if (instrucao.getOperacao() == 'W') {
             pagina.setModificada(true);
+            memoriaRam.escreverDado(pagina.getMolduraPagina(), instrucao.getValor());
         }
     }
 }
