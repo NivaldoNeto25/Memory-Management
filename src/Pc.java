@@ -1,3 +1,4 @@
+import hardware.MMU;
 import hardware.SystemClock;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class Pc {
     private MemoriaVirtual memoriaVirtual;
     private Disco discoRigido;
     private SystemClock systemClock;
+    private MMU mmu;
 
     public Pc(){
         //para iniciar as memorias com os seus tamanhos
@@ -34,6 +36,7 @@ public class Pc {
         this.memoriaVirtual = new MemoriaVirtual(TAMANHO_MEMORIA_VIRTUAL);
         this.discoRigido = new Disco(TAMANHO_DISCO);
         this.systemClock = new SystemClock(VELOCIDADE_CLOCK);
+        this.mmu = new MMU(memoriaFisica, memoriaVirtual, discoRigido, systemClock);
     }
 
 
@@ -67,7 +70,7 @@ public class Pc {
             List<Instrucao> instrucoesSeparadas = new ArrayList<>(listaInstrucoes.subList(indiceInicio, indiceFim));
             
             // Cria a Thread passando um ID e a quantidade de instruções dela
-            //ProcessoThread thread = new ProcessoThread(i + 1, instrucoesSeparadas);
+            //ProcessoThread thread = new ProcessoThread(i + 1, instrucoesSeparadas, mmu);
             //thread.start();
             
             // Prepara o índice inicial para a próxima thread
