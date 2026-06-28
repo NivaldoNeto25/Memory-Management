@@ -7,8 +7,8 @@ public class Pagina {
     private boolean referenciada; // Bit referenciado/não referenciado
     private boolean modificada; // Bit modificado/não modificado  
 
-    private int tempoUltimoAcesso;
-    private Integer valor; // O dado que vai ser armazenado nesse endereço
+    private int tempoUltimoAcesso; // usado pelo algoritmo para calcular a idade da pag
+    private int blocoDisco; // salva o lugar do hd se ocorrer swap
 
     public Pagina() {
         this.molduraPagina = -1; // Tem q ser -1 pq nao da pra iniciar com 0. Se for 0, a MMU acha q a pagina ja ta ocupando o indice 0 da memoria RAM
@@ -16,7 +16,7 @@ public class Pagina {
         this.referenciada = false; // false pq a thread ainda nem comecou a rodar, então ela ainda não foi lida
         this.modificada = false; // false pq a thread ainda nem comecou a rodar, então ainda não teve operaçao de escrita
         this.tempoUltimoAcesso = 0; // inicia o tempo em zero
-        this.valor = null;
+        this.blocoDisco = -1; // -1 significa que não está no HD
     }
     
     public int getMolduraPagina() { 
@@ -59,11 +59,11 @@ public class Pagina {
         this.tempoUltimoAcesso = tempoUltimoAcesso;
     }
 
-    public Integer getValor() {
-        return valor;
+    public int getBlocoDisco() {
+        return blocoDisco;
     }
 
-    public void setValor(Integer valor) {
-        this.valor = valor;
+    public void setBlocoDisco(int blocoDisco) {
+        this.blocoDisco = blocoDisco;
     }
 }
