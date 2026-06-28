@@ -42,5 +42,6 @@ public class SystemClock extends Thread {
     // Método para encerrar a thread
     public void pararClock() {
         this.rodando = false;
+        System.out.println(getTempoAtual());
     }
 }
