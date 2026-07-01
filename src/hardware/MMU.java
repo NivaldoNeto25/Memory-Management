@@ -14,7 +14,7 @@ public class MMU {
     private Disco discoRigido;
     private MemoriaVirtual vm;
     private SystemClock clock;
-    private AlgoritmoSub ws = new AlgoritmoSub(50);
+    private AlgoritmoSub ws = new AlgoritmoSub(35);
 
     public MMU(MemoriaFisica memoriaRam, MemoriaVirtual vm, Disco discoRigido,  SystemClock clock) {
         this.memoriaRam = memoriaRam;

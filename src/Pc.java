@@ -60,6 +60,8 @@ public class Pc {
         int indiceInicio = 0;
 
         List<ProcessoThread> listaThreads = new ArrayList<>();
+
+        systemClock.start();
         
         // laço for para distribuir as instruçoes para as threads, se baseando no numero de threads
         for (int i = 0; i < NUM_THREADS; i++) {
@@ -80,8 +82,6 @@ public class Pc {
             // Prepara o índice inicial para a próxima thread
             indiceInicio = indiceFim;
         }
-
-        systemClock.start();
 
         for (ProcessoThread thread: listaThreads){
             try{
