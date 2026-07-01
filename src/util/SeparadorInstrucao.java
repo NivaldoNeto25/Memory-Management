@@ -19,14 +19,14 @@ public class SeparadorInstrucao {
             
             // agora vai separar baseado nos hifens
             String[] partes = instrucao.split("-");
-            
-            // Vai separar os dados nas variáveis
+
             int endereco = Integer.parseInt(partes[0]);
             char operacao = partes[1].toUpperCase().charAt(0); 
             
             // Escolhe o construtor baseado na operação
             if (operacao == 'W') {
                 // Como é Escrita, a posição [2] do array tem o valor/dado a ser escrito
+                //2,W,50
                 Integer valor = Integer.parseInt(partes[2]);
                 
                 // adicona a lista
