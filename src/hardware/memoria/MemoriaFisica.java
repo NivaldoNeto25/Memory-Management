@@ -50,8 +50,10 @@ public class MemoriaFisica {
     public String getEstadoMemoria() {
         StringBuilder sb = new StringBuilder("{");
         for (int i = 0; i < quadros.length; i++) {
-            if (!ocupado[i] || quadros[i] == null) {
-                sb.append("null");
+            if (!ocupado[i]) {
+                sb.append("---");
+            }else if (quadros[i] == null) {
+                sb.append("[R]");
             } else {
                 sb.append(quadros[i]);
             }

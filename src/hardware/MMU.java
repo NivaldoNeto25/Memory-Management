@@ -28,7 +28,7 @@ public class MMU {
         int endLogico = instrucao.getEnderecoVirtual();
         String tipoOperacao = instrucao.getOperacao() == 'R' ? "Leitura" : "Escrita";
         
-        Printer.log("Thread " + idThread, "Acessando endereco logico " + endLogico + " (" + tipoOperacao + ")");
+        Printer.log("Thread " + idThread, "Acessando endereco " + endLogico + " (" + tipoOperacao + ")");
         
         // As threads podem consultar a Tabela de Páginas simultaneamente
         Pagina pagina = vm.getPagina(endLogico);
@@ -41,6 +41,8 @@ public class MMU {
             
         } else {
             // PAGE FAULT
+            Printer.log("Thread " + idThread, "Page Fault no endereco " + endLogico);
+
             // Como vai mexer no disco e na RAM, precisa trancar esse bloco
             synchronized (this) {
                 
@@ -48,15 +50,15 @@ public class MMU {
 
                 if (!pagina.isPresente()) {
                     
-                    if (!memoriaRam.isCheia()) {
+                    if (!memoriaRam.isCheia()) { // se a ram não estiver cheia, procura um espaço livre e aloca ele
                         
                         int quadroLivre = memoriaRam.encontrarQuadroLivre();
-                        memoriaRam.alocarQuadro(quadroLivre); // aloca um quadro livre
+                        memoriaRam.alocarQuadro(quadroLivre);
                         
                         pagina.setPresente(true);
                         pagina.setMolduraPagina(quadroLivre); // Atualiza o Mapa
                         
-                    } else {
+                    } else { // memoria ram cheia
                         // SWAP
                         Pagina vitima = ws.executar(vm, clock.getTempoAtual(), idThread); // Passa o Mapa
                         int quadroDaVitima = vitima.getMolduraPagina();
@@ -70,7 +72,7 @@ public class MMU {
                                 Integer dadoFisico = memoriaRam.lerDado(quadroDaVitima);
                                 discoRigido.salvarDado(blocoLivre, dadoFisico);
                                 vitima.setBlocoDisco(blocoLivre);
-                                Printer.log("Thread " + idThread, "Vitima modificada! Dado salvo no bloco " + blocoLivre + " do SWAP.");
+                                Printer.log("Thread " + idThread, "Dado salvo no bloco " + blocoLivre + " do Disco.");
                             }
                         }
                         
@@ -96,15 +98,23 @@ public class MMU {
                         memoriaRam.escreverDado(pagina.getMolduraPagina(), dadoResgatado);
                         discoRigido.liberarBloco(pagina.getBlocoDisco());
                         pagina.setBlocoDisco(-1); 
+                        pagina.setModificada(true);
                     }
                 }
             }
         }
         atualizarStatusPagina(pagina, instrucao); // atualiza os bits
+
+        if (instrucao.getOperacao() == 'R') {
+            int quadroFisico = pagina.getMolduraPagina();
+            
+            Integer dadoLido = memoriaRam.lerDado(quadroFisico);
+            
+            Printer.log("Thread " + idThread, "--> Leitura do valor : " + dadoLido);
+        }
         
         Printer.log("Thread " + idThread, "RAM = " + memoriaRam.getEstadoMemoria());
         Printer.log("Thread " + idThread, "Disco = " + discoRigido.getEstadoDisco());
-        System.out.println("--------------------------------------------------");
     }
 
     // Método para atualizar os bits

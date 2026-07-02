@@ -3,7 +3,7 @@ package so;
 
 public class TabelaPaginas {
     
-    // O array que representa a tabela da imagem. O índice é a página virtual.
+    // O array que representa a tabela. O índice é a página virtual.
     private Pagina[] paginas;
 
     public TabelaPaginas(int tamanhoMemoriaVirtual) {

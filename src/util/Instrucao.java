@@ -2,7 +2,7 @@ package util;
 
 public class Instrucao {
 
-    // Classe POJO (Plain Old Java Object): cria um objeto focado apenas em acomodar dados.
+    // Classe cria um objeto focado apenas em acomodar dados.
     // Não possui lógica de negócio, cálculos ou comportamento complexo.
 
     private int enderecoVirtual;

@@ -25,15 +25,15 @@ public class AlgoritmoSub {
         for (Pagina p : vm.getTodasPaginas()) { 
             if (!p.isPresente()) continue; 
 
-            if (p.isReferenciada()) {
+            if (p.isReferenciada()) { //indica que a pag foi acessada recentemente
                 p.setReferenciada(false); 
-            } else {
+            } else { // se não foi referenciada vai olhar as idades 
                 int idade = tempoAtual - p.getTempoUltimoAcesso();
-                if (idade > tau) {
+                if (idade > tau) { // escolhe a que for maior que a variável tau
                     vitima = p;
                     break; 
                 }
-                if (idade > maiorIdade) {
+                if (idade > maiorIdade) { // se não tiver pag fora do conjunto de trabalho, vai escolher a mais velha dentro do conjunto
                     maiorIdade = idade;
                     paginaMaisVelha = p;
                 }
@@ -45,7 +45,7 @@ public class AlgoritmoSub {
                 vitima = paginaMaisVelha;
             } else {
                 int menorTempo = Integer.MAX_VALUE;
-                for (Pagina p : vm.getTodasPaginas()) {
+                for (Pagina p : vm.getTodasPaginas()) { // escolhe com base no tempo do clock
                     if (p.isPresente() && p.getTempoUltimoAcesso() < menorTempo) {
                         menorTempo = p.getTempoUltimoAcesso();
                         vitima = p;

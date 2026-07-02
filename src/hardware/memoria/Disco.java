@@ -40,7 +40,7 @@ public class Disco {
         StringBuilder sb = new StringBuilder("{");
         for (int i = 0; i < blocos.length; i++) {
             if (!ocupado[i] || blocos[i] == null) {
-                sb.append("null");
+                sb.append("---");
             } else {
                 sb.append(blocos[i]);
             }
