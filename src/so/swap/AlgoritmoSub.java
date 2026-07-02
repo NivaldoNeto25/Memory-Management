@@ -20,7 +20,7 @@ public class AlgoritmoSub {
         int maiorIdade = -1;
         Pagina paginaMaisVelha = null;
 
-        Printer.log("Thread " + idThread, "Executando Algoritmo Working Set (tau = " + tau + ")...");
+        Printer.log("Thread " + idThread, "Executando Algoritmo Working Set (tau = " + tau + ")");
 
         for (Pagina p : vm.getTodasPaginas()) { 
             if (!p.isPresente()) continue; 
